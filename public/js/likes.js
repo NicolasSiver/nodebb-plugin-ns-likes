@@ -59,7 +59,8 @@ $(document).ready(function () {
          * @param data {object} Fields: {downvote:false,post:{pid:"14",uid: 4,votes:2},upvote:true,user:{reputation:3}}
          */
         function likeDidChange(data) {
-            getComponentByPostId(data.post.pid, components.TOGGLE_BUTTON).toggleClass('liked', data.upvote);
+            var label = data.upvote ? ' Unlike' : ' Like';
+            getComponentByPostId(data.post.pid, components.TOGGLE_BUTTON).toggleClass('liked', data.upvote).text(label);
         }
 
         /**
