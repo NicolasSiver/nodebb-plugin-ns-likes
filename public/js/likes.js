@@ -13,10 +13,14 @@ $(document).ready(function () {
         //    });
         //});
 
-        var events = {
+        var events    = {
             'event:voted' : likesDidUpdate,
             'posts.upvote': likeDidChange,
             'posts.unvote': likeDidChange
+        }, components = {
+            TOGGLE_BUTTON: 'ns/likes/toggle',
+            COUNT_BUTTON : 'ns/likes/count',
+            USER_LIST    : 'ns/likes/users'
         };
 
         $(window).on('action:ajaxify.start', function (ev, data) {
@@ -33,21 +37,38 @@ $(document).ready(function () {
         });
 
         function addListeners() {
-            $('[component="ns/likes/toggle"]').on('click', function (e) {
+            $(getComponentSelector(components.TOGGLE_BUTTON)).on('click', function (e) {
                 toggleLike($(this));
             });
 
-            $('[component="ns/likes/vote-count"]').on('click', function (e) {
+            $(getComponentSelector(components.COUNT_BUTTON)).on('click', function (e) {
                 showVotersFor($(this));
             });
         }
 
+        function getComponentByPostId(pid, componentType) {
+            return $('[data-pid="' + pid + '"]').find(getComponentSelector(componentType));
+        }
+
+        function getComponentSelector(componentType) {
+            return '[component="' + components[componentType] + '"]';
+        }
+
+        /**
+         * Triggered on like/unliked
+         * @param data {object} Fields: {downvote:false,post:{pid:"14",uid: 4,votes:2},upvote:true,user:{reputation:3}}
+         */
         function likeDidChange(data) {
             console.log('Like did change', data);
         }
 
+        /**
+         * Triggered on Like entity update
+         * @param data {object} Same signature as for like/unliked handler
+         */
         function likesDidUpdate(data) {
-            console.log('Likes did update', data);
+            var votes = data.post.votes;
+            getComponentByPostId(data.post.pid, components.COUNT_BUTTON).text(votes).data('likes', votes);
         }
 
         function renderVoters($el, votersData) {
