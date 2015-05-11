@@ -11,6 +11,12 @@ Import:
     
 Add it wherever you like, but don't forget to delete default one, with chevrons.
 
+## View
+
+By default, it looks like:
+
+![White Bootstrap Theme](http://i.imgur.com/4yLCap8.png)
+
 ## TODO 
 
 - Another style for zero votes
