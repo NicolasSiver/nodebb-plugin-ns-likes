@@ -15,13 +15,29 @@ $(document).ready(function () {
             addListeners();
         });
 
-        function addListeners(){
+        function addListeners() {
             $('[component="ns/likes/toggle"]').on('click', function (e) {
                 console.log('click');
             });
 
             $('[component="ns/likes/vote-count"]').on('click', function (e) {
-                console.log('votes');
+                showVotersFor($(this));
+            });
+        }
+
+        function renderVoters($el, votersData) {
+            var usernames = votersData.usernames;
+            if (usernames.length) {
+                $el.text(usernames.join(', '));
+            }
+        }
+
+        function showVotersFor($el) {
+            var pid = $el.parents('[data-pid]').attr('data-pid');
+            socket.emit('posts.getUpvoters', [pid], function (error, data) {
+                if (!error && data.length) {
+                    renderVoters($el.closest('.ns-likes').find('.ns-likes-users'), data[0]);
+                }
             });
         }
 
