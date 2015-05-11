@@ -51,7 +51,7 @@ $(document).ready(function () {
         }
 
         function getComponentSelector(componentType) {
-            return '[component="' + components[componentType] + '"]';
+            return '[component="' + componentType + '"]';
         }
 
         /**
@@ -59,7 +59,7 @@ $(document).ready(function () {
          * @param data {object} Fields: {downvote:false,post:{pid:"14",uid: 4,votes:2},upvote:true,user:{reputation:3}}
          */
         function likeDidChange(data) {
-            console.log('Like did change', data);
+            getComponentByPostId(data.post.pid, components.TOGGLE_BUTTON).toggleClass('liked', data.upvote);
         }
 
         /**
@@ -109,10 +109,4 @@ $(document).ready(function () {
         }
 
     });
-
-    //$(window).on('action:ajaxify.contentLoaded', function(e, data) {
-    //    if (data.tpl === 'topic') {
-    //        console.log('[Likes] content loaded', data);
-    //    }
-    //});
 });
