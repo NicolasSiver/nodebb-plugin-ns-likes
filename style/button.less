@@ -1,0 +1,28 @@
+@import "material-color/material-color";
+
+.ns-likes-toggle {
+  position: relative;
+  color: @clr-grey-500;
+}
+
+.ns-likes-toggle:before {
+  content: "\f08a";
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  color: @clr-red-300;
+}
+
+.ns-likes-toggle.upvoted {
+  color: @clr-grey-300;
+}
+
+.ns-likes-toggle.upvoted:before {
+  content: "\f004" !important;
+  color: @clr-red-500;
+}
+
+.ns-likes-votes {
+  color: @clr-grey-500;
+}
