@@ -1,0 +1,19 @@
+{
+  "id": "nodebb-plugin-ns-likes",
+  "name": "NodeBB Likes",
+  "description": "Traditional Like system, as you can find on social networks.",
+  "url": "https://github.com/NicolasSiver/nodebb-plugin-ns-likes",
+  "library": "./plugin.js",
+  "hooks": [
+  ],
+  "less": [
+    "style/button.less"
+  ],
+  "scripts": [
+  ],
+  "staticDirs": {
+    "templates": "./public/templates",
+    "js": "./public/js"
+  },
+  "templates": "./public/templates"
+}
