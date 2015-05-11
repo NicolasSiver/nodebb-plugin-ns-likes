@@ -13,15 +13,15 @@ $(document).ready(function () {
         //    });
         //});
 
-        var events    = {
+        var events      = {
             'event:voted' : likesDidUpdate,
             'posts.upvote': likeDidChange,
             'posts.unvote': likeDidChange
-        }, components = {
+        }, components   = {
             TOGGLE_BUTTON: 'ns/likes/toggle',
             COUNT_BUTTON : 'ns/likes/count',
             USER_LIST    : 'ns/likes/users'
-        };
+        }, previewLimit = 3;
 
         $(window).on('action:ajaxify.start', function (ev, data) {
             if (ajaxify.currentPage !== data.url) {
@@ -73,13 +73,23 @@ $(document).ready(function () {
         }
 
         function renderVoters($el, votersData) {
-            var usernames = votersData.usernames;
-            if (usernames.length) {
-                $el
-                    .text(usernames.join(', '))
-                    .css('opacity', 0)
-                    .animate({'opacity': 1}, 200);
+            var usernames = votersData.usernames, len = usernames.length, previewUsernames, renderNames, count = votersData.otherCount;
+            if (len + count > previewLimit) {
+                previewUsernames = usernames.slice(0, previewLimit);
+                count = count + len - previewLimit;
+                //Commas are not allowed from translation
+                renderNames = previewUsernames.join(', ').replace(/,/g, '|');
+                translator.translate('[[topic:users_and_others, ' + renderNames + ', ' + count + ']]', function (translated) {
+                    translated = translated.replace(/\|/g, ',');
+                    $el.text(translated);
+                });
+            } else {
+                $el.text(usernames.join(', '));
             }
+
+            $el
+                .css('opacity', 0)
+                .animate({'opacity': 1}, 200);
         }
 
         function showVotersFor($el) {
