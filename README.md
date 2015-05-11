@@ -22,3 +22,4 @@ By default, it looks like:
 - Another style for zero votes
 - Add links to user list
 - Update user list if It's opened
+- Don't show toggle-button for personal content
