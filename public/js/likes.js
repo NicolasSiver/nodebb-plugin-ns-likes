@@ -1,3 +1,5 @@
+/* globals define, app, ajaxify, bootbox, socket, templates, utils */
+
 $(document).ready(function () {
     'use strict';
 
@@ -11,13 +13,19 @@ $(document).ready(function () {
         //    });
         //});
 
+        var events = {
+            'event:voted' : 'updatePostVotesAndUserReputation',
+            'posts.upvote': 'togglePostVote',
+            'posts.unvote': 'togglePostVote'
+        };
+
         $(window).on('action:topic.loading', function (e) {
             addListeners();
         });
 
         function addListeners() {
             $('[component="ns/likes/toggle"]').on('click', function (e) {
-                console.log('click');
+                toggleLike($(this));
             });
 
             $('[component="ns/likes/vote-count"]').on('click', function (e) {
@@ -34,9 +42,23 @@ $(document).ready(function () {
 
         function showVotersFor($el) {
             var pid = $el.parents('[data-pid]').attr('data-pid');
+
             socket.emit('posts.getUpvoters', [pid], function (error, data) {
                 if (!error && data.length) {
                     renderVoters($el.closest('.ns-likes').find('.ns-likes-users'), data[0]);
+                }
+            });
+        }
+
+        function toggleLike($el) {
+            var pid = $el.parents('[data-pid]').attr('data-pid');
+
+            socket.emit($el.hasClass('upvoted') ? 'posts.unvote' : 'posts.upvote', {
+                pid    : pid,
+                room_id: app.currentRoom
+            }, function (error) {
+                if (error) {
+                    app.alertError(error.message);
                 }
             });
         }

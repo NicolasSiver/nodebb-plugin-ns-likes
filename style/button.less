@@ -1,5 +1,7 @@
 @import "material-color/material-color";
 
+@margin: 8px;
+
 .ns-likes {
   .btn:focus {
     outline: none;
@@ -27,6 +29,12 @@
 .ns-likes-toggle.upvoted:before {
   content: "\f004" !important;
   color: @clr-red-500;
+}
+
+.ns-likes-users {
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: @margin;
 }
 
 .ns-likes-votes {
