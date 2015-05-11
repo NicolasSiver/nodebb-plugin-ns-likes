@@ -7,12 +7,6 @@ $(document).ready(function () {
         'translator'
     ], function (translator) {
 
-        //$(window).on('action:posts.loaded', function (e, data) {
-        //    data.posts.forEach(function (post, index) {
-        //        drawRank($('[component="post/points"][data-pid="' + post.pid + '"]'), getSettings());
-        //    });
-        //});
-
         var events      = {
             'event:voted' : likesDidUpdate,
             'posts.upvote': likeDidChange,
@@ -33,15 +27,28 @@ $(document).ready(function () {
             //To be sure, that we subscribed only once
             toggleSubscription(false);
             toggleSubscription(true);
-            addListeners();
+            addListeners(
+                $(getComponentSelector(components.TOGGLE_BUTTON)),
+                $(getComponentSelector(components.COUNT_BUTTON))
+            );
         });
 
-        function addListeners() {
-            $(getComponentSelector(components.TOGGLE_BUTTON)).on('click', function (e) {
-                toggleLike($(this));
+        $(window).on('action:posts.loaded', function (e, data) {
+            data.posts.forEach(function (post, index) {
+                addListeners(
+                    getComponentByPostId(post.pid, components.TOGGLE_BUTTON),
+                    getComponentByPostId(post.pid, components.COUNT_BUTTON)
+                );
+            });
+        });
+
+        function addListeners($toggleButtons, $countButtons) {
+            $toggleButtons.on('click', function (e) {
+                var $el = $(this);
+                toggleLike(getPostId($el), $el.hasClass('liked'));
             });
 
-            $(getComponentSelector(components.COUNT_BUTTON)).on('click', function (e) {
+            $countButtons.on('click', function (e) {
                 showVotersFor(getPostId($(this)));
             });
         }
@@ -74,6 +81,8 @@ $(document).ready(function () {
         function likesDidUpdate(data) {
             var votes = data.post.votes;
             getComponentByPostId(data.post.pid, components.COUNT_BUTTON).text(votes).data('likes', votes);
+            //TODO Re-render list only if user is interested in it
+            //showVotersFor(data.post.pid);
         }
 
         function renderVoters($el, votersData) {
@@ -104,10 +113,8 @@ $(document).ready(function () {
             });
         }
 
-        function toggleLike($el) {
-            var pid = $el.parents('[data-pid]').attr('data-pid');
-
-            socket.emit($el.hasClass('liked') ? 'posts.unvote' : 'posts.upvote', {
+        function toggleLike(pid, liked) {
+            socket.emit(liked ? 'posts.unvote' : 'posts.upvote', {
                 pid    : pid,
                 room_id: app.currentRoom
             }, function (error) {
@@ -123,6 +130,5 @@ $(document).ready(function () {
                 socket[method](socketEvent, events[socketEvent]);
             }
         }
-
     });
 });
