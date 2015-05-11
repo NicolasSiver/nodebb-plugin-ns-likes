@@ -42,7 +42,7 @@ $(document).ready(function () {
             });
 
             $(getComponentSelector(components.COUNT_BUTTON)).on('click', function (e) {
-                showVotersFor($(this));
+                showVotersFor(getPostId($(this)));
             });
         }
 
@@ -52,6 +52,10 @@ $(document).ready(function () {
 
         function getComponentSelector(componentType) {
             return '[component="' + componentType + '"]';
+        }
+
+        function getPostId($child) {
+            return $child.parents('[data-pid]').attr('data-pid');
         }
 
         /**
@@ -92,12 +96,10 @@ $(document).ready(function () {
                 .animate({'opacity': 1}, 200);
         }
 
-        function showVotersFor($el) {
-            var pid = $el.parents('[data-pid]').attr('data-pid');
-
+        function showVotersFor(pid) {
             socket.emit('posts.getUpvoters', [pid], function (error, data) {
                 if (!error && data.length) {
-                    renderVoters($el.closest('.ns-likes').find('.ns-likes-users'), data[0]);
+                    renderVoters(getComponentByPostId(pid, components.USER_LIST), data[0]);
                 }
             });
         }
