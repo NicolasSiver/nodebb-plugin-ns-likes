@@ -14,12 +14,21 @@ $(document).ready(function () {
         //});
 
         var events = {
-            'event:voted' : 'updatePostVotesAndUserReputation',
-            'posts.upvote': 'togglePostVote',
-            'posts.unvote': 'togglePostVote'
+            'event:voted' : likesDidUpdate,
+            'posts.upvote': likeDidChange,
+            'posts.unvote': likeDidChange
         };
 
+        $(window).on('action:ajaxify.start', function (ev, data) {
+            if (ajaxify.currentPage !== data.url) {
+                toggleSubscription(false);
+            }
+        });
+
         $(window).on('action:topic.loading', function (e) {
+            //To be sure, that we subscribed only once
+            toggleSubscription(false);
+            toggleSubscription(true);
             addListeners();
         });
 
@@ -31,6 +40,14 @@ $(document).ready(function () {
             $('[component="ns/likes/vote-count"]').on('click', function (e) {
                 showVotersFor($(this));
             });
+        }
+
+        function likeDidChange(data) {
+            console.log('Like did change', data);
+        }
+
+        function likesDidUpdate(data) {
+            console.log('Likes did update', data);
         }
 
         function renderVoters($el, votersData) {
@@ -53,7 +70,7 @@ $(document).ready(function () {
         function toggleLike($el) {
             var pid = $el.parents('[data-pid]').attr('data-pid');
 
-            socket.emit($el.hasClass('upvoted') ? 'posts.unvote' : 'posts.upvote', {
+            socket.emit($el.hasClass('liked') ? 'posts.unvote' : 'posts.upvote', {
                 pid    : pid,
                 room_id: app.currentRoom
             }, function (error) {
@@ -61,6 +78,13 @@ $(document).ready(function () {
                     app.alertError(error.message);
                 }
             });
+        }
+
+        function toggleSubscription(state) {
+            var method = state ? 'on' : 'removeListener';
+            for (var socketEvent in events) {
+                socket[method](socketEvent, events[socketEvent]);
+            }
         }
 
     });

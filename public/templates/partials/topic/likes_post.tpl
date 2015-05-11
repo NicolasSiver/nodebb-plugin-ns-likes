@@ -2,7 +2,7 @@
     <!-- IF !reputation:disabled -->
     <div class="ns-likes-users"></div>
     <div class="btn-group">
-        <button component="ns/likes/toggle" type="button" class="btn btn-default btn-xs ns-likes-toggle <!-- IF posts.upvoted -->upvoted<!-- ENDIF posts.upvoted -->">
+        <button component="ns/likes/toggle" type="button" class="btn btn-default btn-xs ns-likes-toggle <!-- IF posts.upvoted -->liked<!-- ENDIF posts.upvoted -->">
             <!-- IF posts.upvoted -->
             Unlike
             <!-- ELSE -->
