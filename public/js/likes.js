@@ -75,7 +75,10 @@ $(document).ready(function () {
         function renderVoters($el, votersData) {
             var usernames = votersData.usernames;
             if (usernames.length) {
-                $el.text(usernames.join(', '));
+                $el
+                    .text(usernames.join(', '))
+                    .css('opacity', 0)
+                    .animate({'opacity': 1}, 200);
             }
         }
 
