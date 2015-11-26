@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/NicolasSiver/nodebb-plugin-ns-likes/issues"
   },
-  "homepage": "https://github.com/NicolasSiver/nodebb-plugin-ns-likes#readme"
+  "homepage": "https://github.com/NicolasSiver/nodebb-plugin-ns-likes#readme",
+  "nbbpm": {
+    "compatibility": "^0.8.0 || ^0.9.0"
+  }
 }
