@@ -1,4 +1,5 @@
-# NodeBB Likes
+# NodeBB: Likes
+
 Traditional Like system, as you can find on social networks. It uses same reputation system.
 
 ## Themes
