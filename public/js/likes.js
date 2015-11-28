@@ -16,7 +16,7 @@ $(document).ready(function () {
                 COUNT_BUTTON : 'ns/likes/count',
                 USER_LIST    : 'ns/likes/users'
             }, previewLimit = 3, Color = net.brehaut.Color,
-            initColor       = Color('#9e9e9e'), targetColor = Color('#ff0000'), totalToColor = 8;
+            initColor       = Color('#9E9E9E'), targetColor = Color('#4CAF50'), totalToColor = 8;
 
         $(window).on('action:ajaxify.start', function (ev, data) {
             if (ajaxify.currentPage !== data.url) {
