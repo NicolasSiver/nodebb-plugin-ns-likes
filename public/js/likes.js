@@ -16,7 +16,7 @@ $(document).ready(function () {
                 COUNT_BUTTON : 'ns/likes/count',
                 USER_LIST    : 'ns/likes/users'
             }, previewLimit = 3, Color = net.brehaut.Color,
-            initColor       = '#9e9e9e', targetColor = '#ff0000', totalToColor = 8;
+            initColor       = Color('#9e9e9e'), targetColor = Color('#ff0000'), totalToColor = 8;
 
         $(window).on('action:ajaxify.start', function (ev, data) {
             if (ajaxify.currentPage !== data.url) {
@@ -58,7 +58,7 @@ $(document).ready(function () {
             $button.text(votes);
             $button.css(
                 'color',
-                Color(initColor).blend(Color(targetColor), votes / totalToColor).toCSS());
+                initColor.blend(targetColor, votes / totalToColor).toCSS());
         }
 
         function getComponentByPostId(pid, componentType) {
