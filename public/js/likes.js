@@ -52,10 +52,14 @@ $(document).ready(function () {
             $countButtons.on('click', function (e) {
                 showVotersFor(getPostId($(this)));
             });
+
+            $countButtons.each(function (index, el) {
+                var $el = $(el);
+                evaluateVotesNumber($el, parseInt($el.text()));
+            });
         }
 
         function evaluateVotesNumber($button, votes) {
-            $button.text(votes);
             $button.css(
                 'color',
                 initColor.blend(targetColor, votes / totalToColor).toCSS());
@@ -89,7 +93,7 @@ $(document).ready(function () {
         function likesDidUpdate(data) {
             var votes = data.post.votes;
             var button = getComponentByPostId(data.post.pid, components.COUNT_BUTTON);
-            button.data('likes', votes);
+            button.data('likes', votes).text(votes);
             evaluateVotesNumber(button, votes);
             //TODO Re-render list only if user is interested in it
             //showVotersFor(data.post.pid);
