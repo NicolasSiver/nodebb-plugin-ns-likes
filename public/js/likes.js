@@ -7,26 +7,27 @@ $(document).ready(function () {
         'translator'
     ], function (translator) {
 
-        var events      = {
-            'event:voted' : likesDidUpdate,
-            'posts.upvote': likeDidChange,
-            'posts.unvote': likeDidChange
-        }, components   = {
-            TOGGLE_BUTTON: 'ns/likes/toggle',
-            COUNT_BUTTON : 'ns/likes/count',
-            USER_LIST    : 'ns/likes/users'
-        }, previewLimit = 3;
+        var events          = {
+                'event:voted' : likesDidUpdate,
+                'posts.upvote': likeDidChange,
+                'posts.unvote': likeDidChange
+            }, components = {
+                TOGGLE_BUTTON: 'ns/likes/toggle',
+                COUNT_BUTTON : 'ns/likes/count',
+                USER_LIST    : 'ns/likes/users'
+            }, previewLimit = 3, Color = net.brehaut.Color,
+            initColor       = '#9e9e9e', targetColor = '#ff0000', totalToColor = 8;
 
         $(window).on('action:ajaxify.start', function (ev, data) {
             if (ajaxify.currentPage !== data.url) {
-                toggleSubscription(false);
+                setSubscription(false);
             }
         });
 
         $(window).on('action:topic.loading', function (e) {
             //To be sure, that we subscribed only once
-            toggleSubscription(false);
-            toggleSubscription(true);
+            setSubscription(false);
+            setSubscription(true);
             addListeners(
                 $(getComponentSelector(components.TOGGLE_BUTTON)),
                 $(getComponentSelector(components.COUNT_BUTTON))
@@ -113,6 +114,13 @@ $(document).ready(function () {
             });
         }
 
+        function setSubscription(state) {
+            var method = state ? 'on' : 'removeListener';
+            for (var socketEvent in events) {
+                socket[method](socketEvent, events[socketEvent]);
+            }
+        }
+
         function toggleLike(pid, liked) {
             socket.emit(liked ? 'posts.unvote' : 'posts.upvote', {
                 pid    : pid,
@@ -122,13 +130,6 @@ $(document).ready(function () {
                     app.alertError(error.message);
                 }
             });
-        }
-
-        function toggleSubscription(state) {
-            var method = state ? 'on' : 'removeListener';
-            for (var socketEvent in events) {
-                socket[method](socketEvent, events[socketEvent]);
-            }
         }
     });
 });

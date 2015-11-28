@@ -10,6 +10,7 @@
     "style/button.less"
   ],
   "scripts": [
+    "public/js/color.js",
     "public/js/likes.js"
   ],
   "staticDirs": {
