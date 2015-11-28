@@ -54,6 +54,13 @@ $(document).ready(function () {
             });
         }
 
+        function evaluateVotesNumber($button, votes) {
+            $button.text(votes);
+            $button.css(
+                'color',
+                Color(initColor).blend(Color(targetColor), votes / totalToColor).toCSS());
+        }
+
         function getComponentByPostId(pid, componentType) {
             return $('[data-pid="' + pid + '"]').find(getComponentSelector(componentType));
         }
@@ -81,7 +88,9 @@ $(document).ready(function () {
          */
         function likesDidUpdate(data) {
             var votes = data.post.votes;
-            getComponentByPostId(data.post.pid, components.COUNT_BUTTON).text(votes).data('likes', votes);
+            var button = getComponentByPostId(data.post.pid, components.COUNT_BUTTON);
+            button.data('likes', votes);
+            evaluateVotesNumber(button, votes);
             //TODO Re-render list only if user is interested in it
             //showVotersFor(data.post.pid);
         }
