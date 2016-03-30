@@ -1,13 +1,8 @@
 # Changelog
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
- 
+### v2.0.0 - TBD
 
-- [v1.1.0 - 11/27/2015](#v110---11272015)
-- [v1.0.0 - 5/11/2015](#v100---5112015)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+- Compatibility with 1.0 forum
 
 ### v1.1.0 - 11/27/2015
 

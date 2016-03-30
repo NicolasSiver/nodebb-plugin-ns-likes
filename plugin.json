@@ -17,5 +17,7 @@
     "templates": "./public/templates",
     "js": "./public/js"
   },
-  "templates": "./public/templates"
+  "templates": "./public/templates",
+  "languages": "./public/language",
+  "defaultLang": "en_US"
 }
