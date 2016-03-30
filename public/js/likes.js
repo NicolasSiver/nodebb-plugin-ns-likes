@@ -7,16 +7,17 @@ $(document).ready(function () {
         'translator'
     ], function (translator) {
 
-        var events          = {
+        var events                                                                     = {
                 'event:voted' : likesDidUpdate,
                 'posts.upvote': likeDidChange,
                 'posts.unvote': likeDidChange
-            }, components = {
-                TOGGLE_BUTTON: 'ns/likes/toggle',
+            }, components                                                              = {
                 COUNT_BUTTON : 'ns/likes/count',
+                MORE         : 'ns/likes/more',
+                TOGGLE_BUTTON: 'ns/likes/toggle',
                 USER_LIST    : 'ns/likes/users'
-            }, previewLimit = 3, Color = net.brehaut.Color,
-            initColor       = Color('#9E9E9E'), targetColor = Color('#4CAF50'), totalToColor = 8;
+            }, previewLimit                                                            = 3, Color                                                 = net.brehaut.Color,
+            initColor = Color('#9E9E9E'), targetColor = Color('#4CAF50'), totalToColor = 8;
 
         $(window).on('action:ajaxify.start', function (ev, data) {
             if (ajaxify.currentPage !== data.url) {
@@ -99,22 +100,28 @@ $(document).ready(function () {
             //showVotersFor(data.post.pid);
         }
 
-        function renderVoters($el, votersData) {
-            var usernames = votersData.usernames, len = usernames.length, previewUsernames, renderNames, count = votersData.otherCount;
+        function renderVoters(pid, votersData) {
+            var usernames = votersData.usernames, len = usernames.length, previewUsernames, count = votersData.otherCount;
+            var $userList = getComponentByPostId(pid, components.USER_LIST);
             if (len + count > previewLimit) {
                 previewUsernames = usernames.slice(0, previewLimit);
                 count = count + len - previewLimit;
-                //Commas are not allowed from translation
-                renderNames = previewUsernames.join(', ').replace(/,/g, '|');
-                translator.translate('[[topic:users_and_others, ' + renderNames + ', ' + count + ']]', function (translated) {
-                    translated = translated.replace(/\|/g, ',');
-                    $el.text(translated);
+                translator.translate('[[nslikes:and]]', function (andText) {
+                    translator.translate('[[nslikes:others]]', function (othersText) {
+                        $userList.html(previewUsernames.join(', ') + ' ' + andText + ' ' + '<span component="ns/likes/more" class="ns-likes-more">' + count + ' ' + othersText + '</span>');
+                        getComponentByPostId(pid, components.MORE).on('click', function (e) {
+                            bootbox.dialog({
+                                title  : "Liked by",
+                                message: 'custom HTML content goes here with avatars'
+                            });
+                        });
+                    });
                 });
             } else {
-                $el.text(usernames.join(', '));
+                $userList.text(usernames.join(', '));
             }
 
-            $el
+            $userList
                 .css('opacity', 0)
                 .animate({'opacity': 1}, 200);
         }
@@ -122,7 +129,7 @@ $(document).ready(function () {
         function showVotersFor(pid) {
             socket.emit('posts.getUpvoters', [pid], function (error, data) {
                 if (!error && data.length) {
-                    renderVoters(getComponentByPostId(pid, components.USER_LIST), data[0]);
+                    renderVoters(pid, data[0]);
                 }
             });
         }
