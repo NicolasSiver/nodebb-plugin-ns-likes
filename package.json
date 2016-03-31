@@ -26,5 +26,8 @@
   "homepage": "https://github.com/NicolasSiver/nodebb-plugin-ns-likes#readme",
   "nbbpm": {
     "compatibility": "^1.x"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.2"
   }
 }
