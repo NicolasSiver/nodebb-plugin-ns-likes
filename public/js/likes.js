@@ -16,7 +16,7 @@ $(document).ready(function () {
                 MORE         : 'ns/likes/more',
                 TOGGLE_BUTTON: 'ns/likes/toggle',
                 USER_LIST    : 'ns/likes/users'
-            }, previewLimit                                                            = 3, Color                                                 = net.brehaut.Color,
+            }, previewLimit                                                            = 3, Color = net.brehaut.Color,
             initColor = Color('#9E9E9E'), targetColor = Color('#4CAF50'), totalToColor = 8;
 
         $(window).on('action:ajaxify.start', function (ev, data) {
@@ -60,6 +60,12 @@ $(document).ready(function () {
             });
         }
 
+        function entitiesToHtml(users) {
+            return users.map(function (user) {
+                return '<a href="' + ajaxify.data.relative_path + '/user/' + user.userslug + '">' + user.username + '</a>';
+            }).join(', ');
+        }
+
         function evaluateVotesNumber($button, votes) {
             $button.css(
                 'color',
@@ -100,15 +106,13 @@ $(document).ready(function () {
             //showVotersFor(data.post.pid);
         }
 
-        function renderVoters(pid, votersData) {
-            var usernames = votersData.usernames, len = usernames.length, previewUsernames, count = votersData.otherCount;
+        function renderVoters(pid, voters, total) {
+            var excluded = total - voters.length;
             var $userList = getComponentByPostId(pid, components.USER_LIST);
-            if (len + count > previewLimit) {
-                previewUsernames = usernames.slice(0, previewLimit);
-                count = count + len - previewLimit;
+            if (excluded > 0) {
                 translator.translate('[[nslikes:and]]', function (andText) {
                     translator.translate('[[nslikes:others]]', function (othersText) {
-                        $userList.html(previewUsernames.join(', ') + ' ' + andText + ' ' + '<span component="ns/likes/more" class="ns-likes-more">' + count + ' ' + othersText + '</span>');
+                        $userList.html(entitiesToHtml(voters) + ' ' + andText + ' ' + '<a href="#" component="ns/likes/more" class="ns-likes-more">' + excluded + ' ' + othersText + '</a>');
                         getComponentByPostId(pid, components.MORE).on('click', function (e) {
                             bootbox.dialog({
                                 title  : "Liked by",
@@ -118,7 +122,7 @@ $(document).ready(function () {
                     });
                 });
             } else {
-                $userList.text(usernames.join(', '));
+                $userList.html(entitiesToHtml(voters));
             }
 
             $userList
@@ -127,11 +131,14 @@ $(document).ready(function () {
         }
 
         function showVotersFor(pid) {
-            socket.emit('posts.getUpvoters', [pid], function (error, data) {
-                if (!error && data.length) {
-                    renderVoters(pid, data[0]);
-                }
-            });
+            socket.emit(
+                'plugins.ns-likes.getVotersShort',
+                {pid: pid, limit: 3},
+                function (error, result) {
+                    if (!error && result.total) {
+                        renderVoters(pid, result.users, result.total);
+                    }
+                });
         }
 
         function setSubscription(state) {
