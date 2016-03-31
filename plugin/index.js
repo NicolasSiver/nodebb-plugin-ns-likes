@@ -38,7 +38,7 @@
     }
 
     function getVoters(socket, payload, callback) {
-
+        getVotersSubList(payload['pid'], payload['from'], -1, callback);
     }
 
     /**
@@ -49,21 +49,32 @@
      * @param callback map which includes properties: 'total' overall count of users in a result and 'users' list of users with limited field-set
      */
     function getVotersShort(socket, payload, callback) {
-        var limit  = payload['limit'] || 3,
-            result = {
-                total: 0,
-                users: []
-            };
-        async.waterfall([
-            async.apply(getUserIdentifiers, payload['pid']),
-            function (ids, next) {
-                var len = ids.length;
+        getVotersSubList(payload['pid'], 0, payload['limit'], callback);
+    }
 
-                if (len > limit) {
+    function getVotersSubList(pid, from, limit, callback) {
+        var result = {
+            total: 0,
+            users: []
+        }, len     = 0;
+
+        async.waterfall([
+            async.apply(getUserIdentifiers, pid),
+            function (ids, next) {
+                len = ids.length;
+                result.total = len;
+
+                // Check start
+                if (from > 0 && from < len) {
+                    ids = ids.slice(from);
+                    len = ids.length;
+                }
+
+                // Apply limit
+                if (limit > 0 && len > limit) {
                     ids = ids.slice(0, limit);
                 }
 
-                result.total = len;
                 getUsers(ids, next);
             },
             function (users, next) {
