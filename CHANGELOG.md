@@ -1,6 +1,6 @@
 # Changelog
 
-### v2.0.0 - TBD
+### v2.0.0 - 3/31/2016
 
 - Compatibility with 1.0 forum
 - Interactivity for voters
