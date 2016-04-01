@@ -3,6 +3,9 @@
 ### v2.0.0 - TBD
 
 - Compatibility with 1.0 forum
+- Interactivity for voters
+- Window with extended list of voters
+- Introduced Language support: en_US
 
 ### v1.1.0 - 11/27/2015
 
