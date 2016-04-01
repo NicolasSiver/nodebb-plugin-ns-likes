@@ -142,14 +142,16 @@ $(document).ready(function () {
                                 {pid: pid, from: previewLimit},
                                 function (error, result) {
                                     if (!error && result.total) {
-                                        bootbox.dialog({
-                                            title   : "Liked by",
-                                            onEscape: true,
-                                            backdrop: false,
-                                            message : '<div class="ns-likes-list">' + entitiesToAvatars(result.users) + '</div>'
+                                        translator.translate('[[nslikes:liked_by]]', function (title) {
+                                            bootbox.dialog({
+                                                title   : title,
+                                                onEscape: true,
+                                                backdrop: false,
+                                                message : '<div class="ns-likes-list">' + entitiesToAvatars(result.users) + '</div>'
+                                            });
+                                            // Show Usernames as tooltips
+                                            $('.ns-likes-list').find('.ns-likes-avatar').tooltip();
                                         });
-                                        // Show Usernames as tooltips
-                                        $('.ns-likes-list').find('.ns-likes-avatar').tooltip();
                                     }
                                 });
                         });
