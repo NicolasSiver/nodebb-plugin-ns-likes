@@ -28,6 +28,6 @@
     "compatibility": "^1.x"
   },
   "dependencies": {
-    "async": "^2.0.0-rc.2"
+    "async": "^1.5.2"
   }
 }
