@@ -7,17 +7,24 @@ $(document).ready(function () {
         'translator'
     ], function (translator) {
 
-        var events                                                                     = {
+        var events       = {
                 'event:voted' : likesDidUpdate,
                 'posts.upvote': likeDidChange,
                 'posts.unvote': likeDidChange
-            }, components                                                              = {
+            },
+
+            components   = {
                 COUNT_BUTTON : 'ns/likes/count',
                 MORE         : 'ns/likes/more',
                 TOGGLE_BUTTON: 'ns/likes/toggle',
                 USER_LIST    : 'ns/likes/users'
-            }, previewLimit                                                            = 3, Color = net.brehaut.Color,
-            initColor = Color('#9E9E9E'), targetColor = Color('#4CAF50'), totalToColor = 8;
+            },
+
+            previewLimit = 3,
+            Color        = net.brehaut.Color,
+            initColor    = Color('#9E9E9E'),
+            targetColor  = Color('#4CAF50'),
+            totalToColor = 8;
 
         $(window).on('action:ajaxify.start', function (ev, data) {
             if (ajaxify.currentPage !== data.url) {
@@ -58,6 +65,22 @@ $(document).ready(function () {
                 var $el = $(el);
                 evaluateVotesNumber($el, parseInt($el.text()));
             });
+        }
+
+        function entitiesToAvatars(users) {
+            function avatar(user) {
+                var avatar = '';
+                if (user.picture) {
+                    avatar = '<div class="ns-likes-avatar" data-original-title="' + user.username + '"><img class="ns-likes-image img-responsive" component="user/picture" data-uid="' + user.uid + '" src="' + user.picture + '" align="left" itemprop="image" /></div>';
+                } else {
+                    avatar = '<div class="ns-likes-avatar" data-original-title="' + user.username + '"><div class="ns-likes-icon" component="user/picture" data-uid="' + user.uid + '" style="background-color: ' + user['icon:bgColor'] + ';">' + user['icon:text'] + '</div></div>';
+                }
+                return avatar;
+            }
+
+            return users.map(function (user) {
+                return '<a href="' + ajaxify.data.relative_path + '/user/' + user.userslug + '">' + avatar(user) + '</a>';
+            }).join('');
         }
 
         function entitiesToHtml(users) {
@@ -114,10 +137,21 @@ $(document).ready(function () {
                     translator.translate('[[nslikes:others]]', function (othersText) {
                         $userList.html(entitiesToHtml(voters) + ' ' + andText + ' ' + '<a href="#" component="ns/likes/more" class="ns-likes-more">' + excluded + ' ' + othersText + '</a>');
                         getComponentByPostId(pid, components.MORE).on('click', function (e) {
-                            bootbox.dialog({
-                                title  : "Liked by",
-                                message: 'custom HTML content goes here with avatars'
-                            });
+                            socket.emit(
+                                'plugins.ns-likes.getVoters',
+                                {pid: pid, from: previewLimit},
+                                function (error, result) {
+                                    if (!error && result.total) {
+                                        bootbox.dialog({
+                                            title   : "Liked by",
+                                            onEscape: true,
+                                            backdrop: false,
+                                            message : '<div class="ns-likes-list">' + entitiesToAvatars(result.users) + '</div>'
+                                        });
+                                        // Show Usernames as tooltips
+                                        $('.ns-likes-list').find('.ns-likes-avatar').tooltip();
+                                    }
+                                });
                         });
                     });
                 });
@@ -133,7 +167,7 @@ $(document).ready(function () {
         function showVotersFor(pid) {
             socket.emit(
                 'plugins.ns-likes.getVotersShort',
-                {pid: pid, limit: 3},
+                {pid: pid, limit: previewLimit},
                 function (error, result) {
                     if (!error && result.total) {
                         renderVoters(pid, result.users, result.total);

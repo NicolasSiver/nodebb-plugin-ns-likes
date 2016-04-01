@@ -1,11 +1,36 @@
 @import "material-color/material-color";
 
-@ns-likes-margin: 8px;
+@ns-likes-base: 8px;
+@ns-likes-margin: @ns-likes-base;
+@ns-likes-margin-s: @ns-likes-base / 2;
+@ns-likes-avatar: @ns-likes-base * 4;
 
 .ns-likes {
   .btn:focus {
     outline: none;
   }
+}
+
+.ns-likes-avatar {
+  flex: 0 0 auto;
+  height: @ns-likes-avatar;
+  width: @ns-likes-avatar;
+  margin: @ns-likes-margin-s;
+
+  .ns-likes-icon {
+    border-radius: 50%;
+    color: @clr-grey-50;
+    line-height: @ns-likes-avatar;
+    text-align: center;
+  }
+
+  .ns-likes-image {
+    border-radius: 50%;
+  }
+}
+
+.ns-likes-list {
+  display: flex;
 }
 
 .ns-likes-toggle {
