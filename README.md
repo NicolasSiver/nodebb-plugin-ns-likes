@@ -31,11 +31,14 @@ Add it wherever you like, but don't forget to delete default one, with chevrons.
 
 By default, it looks like:
 
-![White Bootstrap Theme](http://i.imgur.com/4yLCap8.png)
+![White Bootstrap Theme](screenshot.png)
+
+Additional list:
+
+![Floating Window](screenshot2.png)
 
 ## TODO 
 
 - Another style for zero votes
-- Add links to user list
 - Update user list if It's opened
 - Don't show toggle-button for personal content
