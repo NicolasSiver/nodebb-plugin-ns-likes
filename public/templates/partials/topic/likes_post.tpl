@@ -1,4 +1,4 @@
-<div class="ns-likes">
+<span class="ns-likes">
     <!-- IF !reputation:disabled -->
     <div component="ns/likes/users" class="ns-likes-users"></div>
     <div class="btn-group">
@@ -14,4 +14,4 @@
         </button>
     </div>
     <!-- ENDIF !reputation:disabled -->
-</div>
+</span>
