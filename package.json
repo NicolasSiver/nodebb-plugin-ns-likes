@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-ns-likes",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Traditional Like system, similar to social networks",
   "main": "plugin.js",
   "scripts": {
