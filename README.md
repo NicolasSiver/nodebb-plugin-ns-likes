@@ -4,16 +4,13 @@ Traditional Like system, as you can find on social networks. It uses same reputa
 
 ![Version](https://img.shields.io/npm/v/nodebb-plugin-ns-likes.svg)
 ![Dependencies](https://david-dm.org/NicolasSiver/nodebb-plugin-ns-likes.svg)
-![bitHound Score](https://www.bithound.io/github/NicolasSiver/nodebb-plugin-ns-likes/badges/score.svg)
-![Code Climate](https://img.shields.io/codeclimate/github/NicolasSiver/nodebb-plugin-ns-likes.svg)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
  
 
 - [Themes](#themes)
-- [View](#view)
-- [TODO](#todo)
+- [Screenshots](#screenshots)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,7 +24,7 @@ Import:
     
 Add it wherever you like, but don't forget to delete default one, with chevrons.
 
-## View
+## Screenshots
 
 By default, it looks like:
 
@@ -37,8 +34,3 @@ Additional list:
 
 ![Floating Window](screenshot2.png)
 
-## TODO 
-
-- Another style for zero votes
-- Update user list if It's opened
-- Don't show toggle-button for personal content
